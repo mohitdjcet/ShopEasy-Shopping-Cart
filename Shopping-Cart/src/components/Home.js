@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { addToCart } from './actions/cartActions'
+import { connect } from 'react-redux';
+import { addToCart, fetchItems ,updateCartCount } from './actions/cartActions';
 
  class Home extends Component{
     
+    componentDidMount() {
+        this.props.fetchItems(); // Dispatch action to fetch items from the API
+    }
+
     handleClick = (id)=>{
         this.props.addToCart(id); 
+            this.props.updateCartCount(this.props.cartCount + 1);
     }
 
     render(){
@@ -20,7 +25,7 @@ import { addToCart } from './actions/cartActions'
 
                         <div className="card-content">
                             <p>{item.desc}</p>
-                            <p><b>Price: {item.price}$</b></p>
+                            <p><b>Price: {item.price} rs</b></p>
                         </div>
                  </div>
 
@@ -39,13 +44,16 @@ import { addToCart } from './actions/cartActions'
 }
 const mapStateToProps = (state)=>{
     return {
-      items: state.items
+        items: state.items,
+        cartCount: state.cartCount
     }
   }
 const mapDispatchToProps= (dispatch)=>{
     
     return{
-        addToCart: (id)=>{dispatch(addToCart(id))}
+        fetchItems: () => { dispatch(fetchItems()) },
+        addToCart: (id)=>{dispatch(addToCart(id))},
+        updateCartCount: (count)=>{dispatch(updateCartCount(count))}
     }
 }
 
